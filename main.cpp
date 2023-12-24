@@ -3,6 +3,12 @@
 #include <chrono>
 #include <bits/stdc++.h> 
 #include <atomic>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+#include <ctime>
+#include <cstdlib>
 using namespace std;
 
 
@@ -23,6 +29,39 @@ string inputString(){
 	string input;
 	getline(cin, input);
 	return input;
+}
+
+
+std::string getRandomWords(const std::vector<std::string>& words, int count) {
+    std::string result;
+    std::srand(std::time(0)); // Seed for random number generation
+
+    // Shuffle the vector of words
+    std::vector<std::string> shuffledWords = words;
+    std::random_shuffle(shuffledWords.begin(), shuffledWords.end());
+
+    // Take the first 'count' words and concatenate them into a single string
+    for (int i = 0; i < count && i < shuffledWords.size(); ++i) {
+        result += shuffledWords[i];
+        if (i < count - 1) {
+            result += " "; // Add space between words, except for the last one
+        }
+    }
+
+    return result;
+}
+
+string makestring(){
+    std::ifstream inputFile("words.txt");
+    std::vector<std::string> words;
+    std::string word;
+    while (std::getline(inputFile, word)) {
+        words.push_back(word);
+    }
+    inputFile.close();
+    std::string randomWordsString = getRandomWords(words, 10);
+    // std::cout<< randomWordsString << std::endl;
+    return randomWordsString;
 }
 
 void scoreGenerator(int errors,int promptCount, int inputCount){
@@ -52,16 +91,16 @@ void checker(string prompt, string input){
   				errors += 1;
       }
   }
-  errors = errors + abs(wordCount - 4);
-  scoreGenerator(errors, 4, wordCount);
+  errors = errors + abs(wordCount - 10);
+  scoreGenerator(errors, 10, wordCount);
 }
 
 int main(){
 	cout<<"\033[2J"<<endl;
 	cout<<"\033[H"<<endl;
 	thread displayThread(timecalculate);
-	string prompt = "this is a string";
-	cout<<prompt<<endl;
+	string prompt = makestring();
+	cout<<prompt<<endl<<endl;
 	string input = inputString();
 	checker(prompt, input);
 
