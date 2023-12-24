@@ -32,35 +32,29 @@ string inputString(){
 }
 
 
-std::string getRandomWords(const std::vector<std::string>& words, int count) {
-    std::string result;
-    std::srand(std::time(0)); // Seed for random number generation
-
-    // Shuffle the vector of words
-    std::vector<std::string> shuffledWords = words;
-    std::random_shuffle(shuffledWords.begin(), shuffledWords.end());
-
-    // Take the first 'count' words and concatenate them into a single string
+string getRandomWords(const svector<string>& words, int count) {
+    string result;
+    srand(time(0));
+    vector<string> shuffledWords = words;
+    random_shuffle(shuffledWords.begin(), shuffledWords.end());
     for (int i = 0; i < count && i < shuffledWords.size(); ++i) {
         result += shuffledWords[i];
         if (i < count - 1) {
-            result += " "; // Add space between words, except for the last one
+            result += " ";
         }
     }
-
     return result;
 }
 
 string makestring(){
-    std::ifstream inputFile("words.txt");
-    std::vector<std::string> words;
-    std::string word;
-    while (std::getline(inputFile, word)) {
+    ifstream inputFile("words.txt");
+    vector<std::string> words;
+    string word;
+    while (getline(inputFile, word)) {
         words.push_back(word);
     }
     inputFile.close();
-    std::string randomWordsString = getRandomWords(words, 10);
-    // std::cout<< randomWordsString << std::endl;
+    string randomWordsString = getRandomWords(words, 10);
     return randomWordsString;
 }
 
