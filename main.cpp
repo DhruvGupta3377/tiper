@@ -32,7 +32,7 @@ string inputString(){
 }
 
 
-string getRandomWords(const svector<string>& words, int count) {
+string getRandomWords(const vector<string>& words, int count) {
     string result;
     srand(time(0));
     vector<string> shuffledWords = words;
