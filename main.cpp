@@ -1,28 +1,21 @@
 #include <iostream>
-#include <thread>
 #include <chrono>
 #include <bits/stdc++.h> 
-#include <atomic>
 #include <fstream>
 #include <vector>
 #include <algorithm>
 #include <iterator>
-#include <ctime>
 #include <cstdlib>
 using namespace std;
 
 
-std::atomic<bool> stopTimer(false);
-auto startTime = std::chrono::system_clock::now();
-long timetaken;
+
+auto startTime = std::chrono::high_resolution_clock::now();
+double timetaken;
 
 void timecalculate() {
-  while (!stopTimer) {
-    auto currentTime = std::chrono::system_clock::now();
-    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
-    timetaken = elapsed;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-}
+    auto endTime = std::chrono::high_resolution_clock::now();
+    timetaken = std::chrono::duration<double, std::milli>(endTime-startTime).count();
 }
 
 string inputString(){
@@ -59,8 +52,10 @@ string makestring(){
 }
 
 void scoreGenerator(int errors,int promptCount, int inputCount){
+    timecalculate();
 	int score =  (promptCount - errors)*100/promptCount;
-	int wpm = inputCount*60/timetaken;
+    int temp = (int) timetaken;
+	int wpm = inputCount*60000/timetaken;
 	cout<<"score                  : "<<score<<"%"<<endl;
 	cout<<"wpm (words per minute) : "<<wpm<<endl;
 }
@@ -92,12 +87,8 @@ void checker(string prompt, string input){
 int main(){
 	cout<<"\033[2J"<<endl;
 	cout<<"\033[H"<<endl;
-	thread displayThread(timecalculate);
 	string prompt = makestring();
 	cout<<prompt<<endl<<endl;
 	string input = inputString();
 	checker(prompt, input);
-
-  stopTimer = true;
-  displayThread.join();
 }
